@@ -20,6 +20,8 @@ The PRIMARY AUTHORS are (and/or have been):
     * James Tauber
     * Alex Gaynor
     * Andrew Godwin
+    * Carl Meyer
+    * Ramiro Morales
 
 More information on the main contributors to Django can be found in
 docs/internals/committers.txt.
@@ -308,6 +310,7 @@ answer newbie questions, and generally made Django that much better:
     Simon Litchfield <simon@quo.com.au>
     Daniel Lindsley <polarcowz@gmail.com>
     Trey Long <trey@ktrl.com>
+    Laurent Luce <http://www.laurentluce.com>
     Martin Mahner <http://www.mahner.org/>
     Matt McClanahan <http://mmcc.cx/>
     Stanislaus Madueke
@@ -334,7 +337,6 @@ answer newbie questions, and generally made Django that much better:
     Tobias McNulty <http://www.caktusgroup.com/blog>
     Zain Memon
     Christian Metts
-    Carl Meyer <carl@dirtcircle.com>
     michal@plovarna.cz
     Slawek Mikula <slawek dot mikula at gmail dot com>
     mitakummaa@gmail.com
@@ -342,7 +344,6 @@ answer newbie questions, and generally made Django that much better:
     Andreas Mock <andreas.mock@web.de>
     Reza Mohammadi <reza@zeerak.ir>
     Aljosa Mohorovic <aljosa.mohorovic@gmail.com>
-    Ramiro Morales <rm0@gmx.net>
     Eric Moritz <http://eric.themoritzfamily.com/>
     msaelices <msaelices@gmail.com>
     Gregor Müllegger <gregor@muellegger.de>
