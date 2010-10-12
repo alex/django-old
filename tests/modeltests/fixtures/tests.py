@@ -237,6 +237,8 @@ class FixtureLoadingTests(TestCase):
     def test_ambiguous_compressed_fixture(self):
         # The name "fixture5" is ambigous, so loading it will raise an error
         new_io = StringIO.StringIO()
+        import ipdb
+        ipdb.set_trace()
         management.call_command('loaddata', 'fixture5', verbosity=0, stderr=new_io, commit=False)
         output = new_io.getvalue().strip().split('\n')
         self.assertEqual(len(output), 1)
