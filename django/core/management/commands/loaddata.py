@@ -193,11 +193,13 @@ class Command(BaseCommand):
                 using=using,
                 stdout=self.stdout
             )
-        except CommandError:
+        except CommandError, e:
             if commit:
                 transaction.rollback(using=using)
                 transaction.leave_transaction_management(using=using)
-            raise
+            # For reasons I don't understand CommandErrors are never raised.
+            self.stderr.write(e.args[0] + "\n")
+            return
         for obj in objs:
             obj.save(using=using)
 
