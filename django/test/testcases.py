@@ -261,7 +261,10 @@ class TransactionTestCase(unittest.TestCase):
 
     def _load_fixture_objs(self, db):
         for obj in self._fixture_objs.get(db, []):
+            # DeserializedObject.save clears m2m_data, we get it back in there
+            m2m_data = obj.m2m_data
             obj.save(using=db)
+            obj.m2m_data = m2m_data
 
     def _pre_setup(self):
         """Performs any pre-test setup. This includes:
