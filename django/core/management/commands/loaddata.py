@@ -145,7 +145,7 @@ def find_fixture_data(fixture_labels, verbosity, using, stdout):
                 if objects_in_fixture == 0:
                     raise CommandError("No fixture data found for '%s'. "
                         "(File format may be invalid.)" % fixture_name)
-    return objs, models, fixture_object_count
+    return objs, models, fixture_count, fixture_object_count
 
 class Command(BaseCommand):
     help = 'Installs the named fixture(s) in the database.'
@@ -187,7 +187,7 @@ class Command(BaseCommand):
             transaction.managed(True, using=using)
 
         try:
-            objs, models, fixture_object_count = find_fixture_data(
+            objs, models, fixture_count, fixture_object_count = find_fixture_data(
                 fixture_labels,
                 verbosity=verbosity,
                 using=using,
@@ -220,12 +220,12 @@ class Command(BaseCommand):
                 self.stdout.write("No fixtures found.\n")
         else:
             if verbosity >= 1:
-                if fixture_object_count == loaded_object_count:
+                if fixture_object_count == len(objs):
                     self.stdout.write("Installed %d object(s) from %d fixture(s)\n" % (
-                        loaded_object_count, fixture_count))
+                        len(objs), fixture_count))
                 else:
                     self.stdout.write("Installed %d object(s) (of %d) from %d fixture(s)\n" % (
-                        loaded_object_count, fixture_object_count, fixture_count))
+                        len(objs), fixture_object_count, fixture_count))
 
         # Close the DB connection. This is required as a workaround for an
         # edge case in MySQL: if the same connection is used to
