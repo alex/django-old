@@ -6,6 +6,7 @@ from xml.dom.minidom import parseString, Node
 from django.conf import settings
 from django.core import mail
 from django.core.management import call_command
+from django.core.management.commands.loaddata import find_fixture_data
 from django.core.urlresolvers import clear_url_caches
 from django.db import transaction, connection, connections, DEFAULT_DB_ALIAS
 from django.http import QueryDict
@@ -238,6 +239,30 @@ class TransactionTestCase(unittest.TestCase):
     # Can be overridden in derived classes.
     client_class = Client
 
+    @classmethod
+    def setUpClass(cls):
+        cls._fixture_objs = {}
+        if hasattr(cls, "fixtures"):
+            for db in cls._get_dbs():
+                cls._fixture_objs[db] = find_fixture_data(
+                    cls.fixtures, verbosity=0, using=db, stdout=sys.stdout
+                )[0]
+
+    @classmethod
+    def tearDownClass(cls):
+        # To save memory I suppose.
+        del cls._fixture_objs
+
+    @classmethod
+    def _get_dbs(cls):
+        if getattr(cls, 'multi_db', False):
+            return connections
+        return [DEFAULT_DB_ALIAS]
+
+    def _load_fixture_objs(self, db):
+        for obj in self._fixture_objs[db]:
+            obj.save(using=db)
+
     def _pre_setup(self):
         """Performs any pre-test setup. This includes:
 
@@ -255,17 +280,9 @@ class TransactionTestCase(unittest.TestCase):
     def _fixture_setup(self):
         # If the test case has a multi_db=True flag, flush all databases.
         # Otherwise, just flush default.
-        if getattr(self, 'multi_db', False):
-            databases = connections
-        else:
-            databases = [DEFAULT_DB_ALIAS]
-        for db in databases:
+        for db in self._get_dbs():
             call_command('flush', verbosity=0, interactive=False, database=db)
-
-            if hasattr(self, 'fixtures'):
-                # We have to use this slightly awkward syntax due to the fact
-                # that we're using *args and **kwargs together.
-                call_command('loaddata', *self.fixtures, **{'verbosity': 0, 'database': db})
+            self._load_fixture_objs(db)
 
     def _urlconf_setup(self):
         if hasattr(self, 'urls'):
@@ -535,11 +552,7 @@ class TestCase(TransactionTestCase):
 
         # If the test case has a multi_db=True flag, setup all databases.
         # Otherwise, just use default.
-        if getattr(self, 'multi_db', False):
-            databases = connections
-        else:
-            databases = [DEFAULT_DB_ALIAS]
-
+        databases = self._get_dbs()
         for db in databases:
             transaction.enter_transaction_management(using=db)
             transaction.managed(True, using=db)
@@ -549,12 +562,7 @@ class TestCase(TransactionTestCase):
         Site.objects.clear_cache()
 
         for db in databases:
-            if hasattr(self, 'fixtures'):
-                call_command('loaddata', *self.fixtures, **{
-                                                            'verbosity': 0,
-                                                            'commit': False,
-                                                            'database': db
-                                                            })
+            self._load_fixture_objs(db)
 
     def _fixture_teardown(self):
         if not connections_support_transactions():
