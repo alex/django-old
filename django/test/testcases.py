@@ -260,7 +260,7 @@ class TransactionTestCase(unittest.TestCase):
         return [DEFAULT_DB_ALIAS]
 
     def _load_fixture_objs(self, db):
-        for obj in self._fixture_objs[db]:
+        for obj in self._fixture_objs.get(db, []):
             obj.save(using=db)
 
     def _pre_setup(self):
