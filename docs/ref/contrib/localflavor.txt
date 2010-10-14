@@ -51,6 +51,7 @@ Countries currently supported by :mod:`~django.contrib.localflavor` are:
     * India_
     * Indonesia_
     * Ireland_
+    * Israel_
     * Italy_
     * Japan_
     * Kuwait_
@@ -99,6 +100,7 @@ Here's an example of how to use them::
 .. _India: `India (in\_)`_
 .. _Indonesia: `Indonesia (id)`_
 .. _Ireland: `Ireland (ie)`_
+.. _Israel: `Israel (il)`_
 .. _Italy: `Italy (it)`_
 .. _Japan: `Japan (jp)`_
 .. _Kuwait: `Kuwait (kw)`_
@@ -445,6 +447,19 @@ Indonesia (``id``)
     down the numbers.
 
 .. _NIK: http://en.wikipedia.org/wiki/Indonesian_identity_card
+
+Israel (``il``)
+===============
+
+.. class: il.forms.ILPostalCodeField
+
+    A form field that validates its input as an Israeli postal code. A valid
+    form is XXXXX where X represents integer.
+
+.. class:: il.forms.ILIDNumberField
+
+    A form field that validates its input as an Israeli identification number.
+    Valid form is per the Israeli ID specification.
 
 Italy (``it``)
 ==============
