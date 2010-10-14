@@ -5,6 +5,7 @@ import re
 
 from django.core.exceptions import ValidationError
 from django.forms.fields import RegexField, Field, EMPTY_VALUES
+from django.utils.checksums import luhn
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -46,16 +47,6 @@ class ILIDNumberField(Field):
         match = id_number_re.match(value)
         if not match:
             raise ValidationError(self.error_messages['invalid'])
-
-        number = match.groupdict()['number'].zfill(8)
-        check = int(match.groupdict()['check'])
-
-        sum = 0
-        weight = 1
-        for digit in number + str(check):
-            sum += (lambda x: x/10 + x % 10)(int(digit)*weight)
-            weight ^= 3
-
-        if sum % 10 != 0:
+        if not luhn(value):
             raise ValidationError(self.error_messages['invalid'])
         return value
