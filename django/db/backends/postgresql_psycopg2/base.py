@@ -72,6 +72,7 @@ class DatabaseFeatures(BaseDatabaseFeatures):
     can_defer_constraint_checks = True
     has_select_for_update = True
     has_select_for_update_nowait = True
+    has_bulk_insert = True
 
 
 class DatabaseWrapper(BaseDatabaseWrapper):
