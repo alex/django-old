@@ -825,12 +825,12 @@ class SQLInsertCompiler(SQLCompiler):
             ]
         if self.return_id and self.connection.features.can_return_id_from_insert:
             params = values[0]
-            col = "%s.%s" % (qn(opst.db_table), qn(opts.pk.column))
+            col = "%s.%s" % (qn(opts.db_table), qn(opts.pk.column))
             result.append("VALUES (%s)" % ", ".join(placeholders[0]))
             r_fmt, r_params = self.connection.ops.return_insert_id()
             result.append(r_fmt % col)
             params += r_params
-            return [(" ".join(result), tuple(param))]
+            return [(" ".join(result), tuple(params))]
         if can_bulk and self.connection.features.has_bulk_insert:
             result.append(self.connection.ops.bulk_insert_sql(fields, len(values)))
             return [(" ".join(result), tuple([v for val in values for v in val]))]
